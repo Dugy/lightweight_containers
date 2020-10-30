@@ -46,7 +46,7 @@ bool CircularBufferImpl::find(uint8_t* sequence, int from, int till, uint8_t* co
 	  if (erase) {
 		if (_firstInserted != _lastInserted) {
 		  for (int j = 0; j < _elementSize; j++)
-			copyLocation[i * _elementSize + j] = _data[_firstInserted * _elementSize + j];
+			_data[i * _elementSize + j] = _data[_firstInserted * _elementSize + j];
 		}
 		popFront();
 	  }
@@ -57,7 +57,9 @@ bool CircularBufferImpl::find(uint8_t* sequence, int from, int till, uint8_t* co
 }
 
 bool CircularBufferImpl::full() const {
-  return ((_lastInserted + 1) % _capacity != _firstInserted);
+	if (_lastInserted == -1)
+	  return false;
+  return ((_lastInserted + 1) % _capacity == _firstInserted);
 }
 
 int CircularBufferImpl::size() const {
