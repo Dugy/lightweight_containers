@@ -3,10 +3,24 @@
 #include <chrono>
 #include <thread>
 
+template <typename T>
+using StaticAwaitable = Awaitable<T, StaticAllocator<>>;
+
+StaticAwaitable<int> workForLong() {
+	std::cout << "Working for long" << std::endl;
+	co_await waitForMs(100);
+	co_return 3;
+}
+
+StaticAwaitable<int> work() {
+	std::cout << "Working" << std::endl;
+	co_return co_await workForLong();
+}
+
 Task messAround() {
 	while (true) {
 		std::cout << "Messing around" << std::endl;
-		co_await waitForMs(250);
+		co_await waitSomeTime();
 	}
 }
 
@@ -20,13 +34,10 @@ Task chillOut() {
 Task slack() {
 	while (true) {
 		std::cout << "Slacking" << std::endl;
-		co_await waitSomeTime();
+		int worked = co_await work();
+		std::cout << "Slacking after work with result " << worked << std::endl;
+		co_await waitForMs(250);
 	}
-}
-
-Task work() {
-	std::cout << "Working" << std::endl;
-	co_return;
 }
 
 int main() {
@@ -34,8 +45,7 @@ int main() {
 	scheduler.addTask(messAround());
 	scheduler.addTask(chillOut());
 	scheduler.addTask(slack());
-	scheduler.addTask(work());
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 30; i++) {
 		scheduler.runATask();
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}

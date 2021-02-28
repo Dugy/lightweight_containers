@@ -4,7 +4,7 @@ STL comes with pretty nice utility classes. However, most of them are strongly d
 I have made a some utilities designed to be much more lightweight at the cost of being limited in size:
 
 ## Coroutines
-Coroutines are super useful in embedded software. They allow writing slow control logic that needs to be interrupted a lot as interruptible functions rather than long and unreadable state machines. `scheduler.hpp` (and `scheduler.cpp`) contain a utility wrapper for coroutine handles and a scheduler than can run them.
+Coroutines are super useful in embedded software (if you have access to C++20). They allow writing slow control logic that needs to be interrupted a lot as interruptible functions rather than long and unreadable state machines. `scheduler.hpp` (and `scheduler.cpp`) contain a utility wrapper for coroutine handles and a scheduler than can run them.
 
 ```C++
 // Function declaration somewhere
